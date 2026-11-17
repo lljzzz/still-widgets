@@ -1,0 +1,403 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://still.local/schema/package-v1.json",
+  "title": "Still widget package v1",
+  "description": "A declarative widget. Packages cannot run scripts or load remote content.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "version",
+    "kind",
+    "name",
+    "author",
+    "description"
+  ],
+  "properties": {
+    "format": {
+      "const": "still-widget"
+    },
+    "version": {
+      "const": 1
+    },
+    "kind": {
+      "enum": [
+        "clock",
+        "system",
+        "custom",
+        "code"
+      ]
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 80,
+      "minLength": 1
+    },
+    "author": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000
+    },
+    "appearance": {
+      "$ref": "#/$defs/appearance"
+    },
+    "blocks": {
+      "type": "array",
+      "maxItems": 12,
+      "items": {
+        "$ref": "#/$defs/block"
+      }
+    },
+    "options": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "showSeconds": {
+          "type": "boolean"
+        },
+        "hour24": {
+          "type": "boolean"
+        },
+        "showDay": {
+          "type": "boolean"
+        },
+        "showDate": {
+          "type": "boolean"
+        },
+        "secondsBar": {
+          "type": "boolean"
+        },
+        "dateFormat": {
+          "enum": [
+            "long",
+            "medium",
+            "short",
+            "numeric",
+            "iso"
+          ]
+        },
+        "leadingZero": {
+          "type": "boolean"
+        },
+        "metrics": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 7,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "cpu",
+              "cores",
+              "memory",
+              "swap",
+              "disk",
+              "network",
+              "uptime"
+            ]
+          }
+        },
+        "meterStyle": {
+          "enum": [
+            "bars",
+            "rings",
+            "graph",
+            "text"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "showTitle": {
+          "type": "boolean"
+        },
+        "showDetails": {
+          "type": "boolean"
+        },
+        "disk": {
+          "type": "string",
+          "maxLength": 64,
+          "description": "Mount point such as C:\\. Empty means the system drive."
+        }
+      }
+    },
+    "width": {
+      "type": "number",
+      "minimum": 120,
+      "maximum": 1600
+    },
+    "height": {
+      "type": "number",
+      "minimum": 60,
+      "maximum": 1200
+    },
+    "tags": {
+      "type": "array",
+      "maxItems": 6,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 24
+      }
+    },
+    "code": {
+      "$ref": "#/$defs/code"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "custom"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "blocks"
+        ],
+        "properties": {
+          "blocks": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "code"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "code"
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "appearance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "accent": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "background": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "textColor": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "opacity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "blur": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 40,
+          "description": "Wallpaper blur strength in px."
+        },
+        "blurMode": {
+          "enum": [
+            "off",
+            "wallpaper",
+            "acrylic"
+          ]
+        },
+        "radius": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 48
+        },
+        "font": {
+          "type": "string",
+          "pattern": "^(Manrope|DM Sans|Consolas|font-[A-Za-z0-9-]+)$"
+        },
+        "scale": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 2
+        },
+        "animations": {
+          "type": "boolean"
+        },
+        "borderWidth": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 4
+        },
+        "borderColor": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "borderOpacity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "align": {
+          "enum": [
+            "left",
+            "center",
+            "right"
+          ]
+        },
+        "fontWeight": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 900
+        },
+        "padding": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 64
+        },
+        "mutedOpacity": {
+          "type": "number",
+          "minimum": 0.2,
+          "maximum": 1
+        },
+        "textShadow": {
+          "type": "boolean"
+        },
+        "markers": {
+          "type": "boolean"
+        }
+      }
+    },
+    "block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "text",
+            "time",
+            "date",
+            "cpu",
+            "memory",
+            "swap",
+            "disk",
+            "network",
+            "uptime"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "size": {
+          "type": "number",
+          "minimum": 8,
+          "maximum": 96,
+          "default": 18
+        }
+      }
+    },
+    "code": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "HTML, CSS and JavaScript run in a sandbox without network, file or app access. Up to 128 KB in total.",
+      "properties": {
+        "html": {
+          "type": "string"
+        },
+        "css": {
+          "type": "string"
+        },
+        "js": {
+          "type": "string"
+        },
+        "fields": {
+          "type": "array",
+          "maxItems": 24,
+          "items": {
+            "$ref": "#/$defs/field"
+          }
+        },
+        "permissions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "audio",
+              "metrics"
+            ]
+          }
+        }
+      }
+    },
+    "field": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "key",
+        "label",
+        "type",
+        "default"
+      ],
+      "properties": {
+        "key": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "type": {
+          "enum": [
+            "number",
+            "color",
+            "toggle",
+            "text",
+            "select"
+          ]
+        },
+        "default": {
+          "type": [
+            "number",
+            "string",
+            "boolean"
+          ],
+          "description": "Must match the type; a select default must be one of its options."
+        },
+        "min": {
+          "type": "number"
+        },
+        "max": {
+          "type": "number"
+        },
+        "step": {
+          "type": "number"
+        },
+        "options": {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          }
+        }
+      }
+    }
+  }
+}

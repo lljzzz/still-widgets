@@ -1,0 +1,34 @@
+{
+  "format": "still-widget",
+  "version": 1,
+  "kind": "custom",
+  "name": "Notes",
+  "author": "Still",
+  "description": "Editable text with today's date. Change the words in the editor's Content tab.",
+  "width": 340,
+  "height": 190,
+  "appearance": {
+    "opacity": 0.55,
+    "accent": "#d8c9a6"
+  },
+  "blocks": [
+    {
+      "type": "text",
+      "text": "Today",
+      "size": 16
+    },
+    {
+      "type": "text",
+      "text": "One thing at a time.",
+      "size": 26
+    },
+    {
+      "type": "date",
+      "size": 13
+    }
+  ],
+  "tags": [
+    "text",
+    "notes"
+  ]
+}

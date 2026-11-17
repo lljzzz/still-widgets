@@ -1,0 +1,27 @@
+{
+  "format": "still-widget",
+  "version": 1,
+  "kind": "system",
+  "name": "Activity graph",
+  "author": "Still",
+  "description": "The last minute of network and CPU activity as small line graphs.",
+  "width": 340,
+  "height": 210,
+  "appearance": {
+    "accent": "#b1c5d2",
+    "background": "#171b1f",
+    "opacity": 0.72
+  },
+  "options": {
+    "metrics": [
+      "network",
+      "cpu"
+    ],
+    "meterStyle": "graph",
+    "title": "Activity"
+  },
+  "tags": [
+    "graph",
+    "network"
+  ]
+}

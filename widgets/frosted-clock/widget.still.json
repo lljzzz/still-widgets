@@ -1,0 +1,30 @@
+{
+  "format": "still-widget",
+  "version": 1,
+  "kind": "clock",
+  "name": "Frosted clock",
+  "author": "Still",
+  "description": "Clock and date on a pane of blurred wallpaper. Adjust the blur strength in the editor.",
+  "width": 340,
+  "height": 200,
+  "appearance": {
+    "blurMode": "wallpaper",
+    "blur": 22,
+    "opacity": 0.28,
+    "background": "#20231f",
+    "accent": "#d8c9a6",
+    "radius": 26,
+    "padding": 28,
+    "borderWidth": 1,
+    "borderColor": "#ffffff",
+    "borderOpacity": 0.14
+  },
+  "options": {
+    "showSeconds": false,
+    "dateFormat": "medium"
+  },
+  "tags": [
+    "blur",
+    "date"
+  ]
+}

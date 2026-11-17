@@ -1,0 +1,26 @@
+{
+  "format": "still-widget",
+  "version": 1,
+  "kind": "custom",
+  "name": "Uptime tag",
+  "author": "Still",
+  "description": "A small label showing how long this PC has been on.",
+  "width": 200,
+  "height": 64,
+  "appearance": {
+    "opacity": 0.6,
+    "padding": 14,
+    "radius": 12,
+    "align": "center"
+  },
+  "blocks": [
+    {
+      "type": "uptime",
+      "size": 15
+    }
+  ],
+  "tags": [
+    "small",
+    "uptime"
+  ]
+}

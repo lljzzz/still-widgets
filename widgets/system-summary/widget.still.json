@@ -1,0 +1,31 @@
+{
+  "format": "still-widget",
+  "version": 1,
+  "kind": "system",
+  "name": "System summary",
+  "author": "Still",
+  "description": "A compact text readout: CPU, memory, disk and uptime.",
+  "width": 320,
+  "height": 150,
+  "appearance": {
+    "font": "Consolas",
+    "opacity": 0.55,
+    "padding": 18,
+    "radius": 10,
+    "accent": "#cbc5b9"
+  },
+  "options": {
+    "metrics": [
+      "cpu",
+      "memory",
+      "disk",
+      "uptime"
+    ],
+    "meterStyle": "text",
+    "title": "This PC"
+  },
+  "tags": [
+    "text",
+    "compact"
+  ]
+}

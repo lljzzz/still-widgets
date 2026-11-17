@@ -1,0 +1,25 @@
+{
+  "format": "still-widget",
+  "version": 1,
+  "kind": "clock",
+  "name": "12-hour clock",
+  "author": "Still",
+  "description": "AM/PM time without a leading zero, with a seconds bar.",
+  "width": 360,
+  "height": 210,
+  "appearance": {
+    "font": "DM Sans",
+    "background": "#1b1f26",
+    "accent": "#b1c5d2",
+    "textColor": "#e9eef3",
+    "opacity": 0.8
+  },
+  "options": {
+    "hour24": false,
+    "leadingZero": false,
+    "dateFormat": "short"
+  },
+  "tags": [
+    "12-hour"
+  ]
+}

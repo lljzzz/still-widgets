@@ -1,0 +1,28 @@
+{
+  "format": "still-widget",
+  "version": 1,
+  "kind": "clock",
+  "name": "Big clock",
+  "author": "Still",
+  "description": "Large time with no panel behind it. Reads well over busy wallpapers thanks to a soft text shadow.",
+  "width": 380,
+  "height": 150,
+  "appearance": {
+    "opacity": 0,
+    "textShadow": true,
+    "align": "center",
+    "fontWeight": 300,
+    "padding": 8,
+    "scale": 1.15,
+    "textColor": "#f4f1ea"
+  },
+  "options": {
+    "showSeconds": false,
+    "showDay": false,
+    "showDate": false
+  },
+  "tags": [
+    "minimal",
+    "transparent"
+  ]
+}

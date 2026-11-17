@@ -1,0 +1,61 @@
+{
+  "format": "still-widget",
+  "version": 1,
+  "kind": "code",
+  "name": "Waveform",
+  "author": "Still",
+  "description": "An oscilloscope line drawn from the sound your PC is playing.",
+  "width": 380,
+  "height": 120,
+  "appearance": {
+    "padding": 12,
+    "opacity": 0.45,
+    "radius": 16,
+    "accent": "#b1c5d2"
+  },
+  "code": {
+    "html": "<canvas></canvas>",
+    "css": "canvas {\n  display: block;\n  width: 100%;\n  height: 100%;\n}\n",
+    "js": "const canvas = document.querySelector(\"canvas\");\nconst ctx = canvas.getContext(\"2d\");\n\nfunction fit() {\n  const ratio = devicePixelRatio || 1;\n  canvas.width = Math.round(innerWidth * ratio);\n  canvas.height = Math.round(innerHeight * ratio);\n  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);\n}\nfit();\nstill.on(\"resize\", fit);\n\nlet wave = new Array(128).fill(0);\nlet shown = wave.slice();\nstill.on(\"audio\", (audio) => (wave = audio.wave));\n\nfunction draw() {\n  const { thickness, gain, glow, fill } = still.values;\n  const w = innerWidth;\n  const h = innerHeight;\n  ctx.clearRect(0, 0, w, h);\n  // Ease toward the newest samples so the line doesn't jitter.\n  shown = shown.map((v, i) => v + ((wave[i] || 0) - v) * 0.5);\n  const y = (v) => h / 2 - Math.max(-1, Math.min(1, v * gain)) * (h / 2 - thickness);\n  ctx.beginPath();\n  shown.forEach((v, i) => {\n    const x = (i / (shown.length - 1)) * w;\n    if (i === 0) ctx.moveTo(x, y(v));\n    else ctx.lineTo(x, y(v));\n  });\n  ctx.lineJoin = \"round\";\n  ctx.lineWidth = thickness;\n  ctx.strokeStyle = still.theme.accent;\n  ctx.shadowColor = still.theme.accent;\n  ctx.shadowBlur = glow ? 10 : 0;\n  ctx.stroke();\n  if (fill) {\n    ctx.lineTo(w, h / 2);\n    ctx.lineTo(0, h / 2);\n    ctx.closePath();\n    ctx.globalAlpha = 0.18;\n    ctx.fillStyle = still.theme.accent;\n    ctx.fill();\n    ctx.globalAlpha = 1;\n  }\n  requestAnimationFrame(draw);\n}\ndraw();\n",
+    "permissions": [
+      "audio"
+    ],
+    "fields": [
+      {
+        "key": "thickness",
+        "label": "Line width",
+        "type": "number",
+        "default": 2,
+        "min": 1,
+        "max": 6,
+        "step": 0.5
+      },
+      {
+        "key": "gain",
+        "label": "Gain",
+        "type": "number",
+        "default": 1.6,
+        "min": 0.5,
+        "max": 4,
+        "step": 0.1
+      },
+      {
+        "key": "glow",
+        "label": "Glow",
+        "type": "toggle",
+        "default": true
+      },
+      {
+        "key": "fill",
+        "label": "Fill under the line",
+        "type": "toggle",
+        "default": false
+      }
+    ]
+  },
+  "tags": [
+    "audio",
+    "visualizer",
+    "code"
+  ]
+}

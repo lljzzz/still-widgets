@@ -1,0 +1,30 @@
+{
+  "format": "still-widget",
+  "version": 1,
+  "kind": "system",
+  "name": "Resource rings",
+  "author": "Still",
+  "description": "CPU, memory, disk and swap as four rings in one row.",
+  "width": 440,
+  "height": 160,
+  "appearance": {
+    "opacity": 0.6,
+    "radius": 20,
+    "padding": 20
+  },
+  "options": {
+    "metrics": [
+      "cpu",
+      "memory",
+      "disk",
+      "swap"
+    ],
+    "meterStyle": "rings",
+    "showTitle": false,
+    "showDetails": false
+  },
+  "tags": [
+    "rings",
+    "performance"
+  ]
+}

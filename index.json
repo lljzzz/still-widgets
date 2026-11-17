@@ -1,0 +1,493 @@
+{
+  "format": "still-catalog",
+  "version": 1,
+  "name": "Still widget catalog",
+  "updated": "2026-11-17",
+  "widgets": [
+    {
+      "id": "activity-graph",
+      "updated": "2026-11-17",
+      "package": {
+        "format": "still-widget",
+        "version": 1,
+        "kind": "system",
+        "name": "Activity graph",
+        "author": "Still",
+        "description": "The last minute of network and CPU activity as small line graphs.",
+        "width": 340,
+        "height": 210,
+        "appearance": {
+          "accent": "#b1c5d2",
+          "background": "#171b1f",
+          "opacity": 0.72
+        },
+        "options": {
+          "metrics": [
+            "network",
+            "cpu"
+          ],
+          "meterStyle": "graph",
+          "title": "Activity"
+        },
+        "tags": [
+          "graph",
+          "network"
+        ]
+      }
+    },
+    {
+      "id": "analog-clock",
+      "updated": "2026-11-17",
+      "package": {
+        "format": "still-widget",
+        "version": 1,
+        "kind": "code",
+        "name": "Analog clock",
+        "author": "Still",
+        "description": "A round clock with a smooth second hand, drawn in code.",
+        "width": 200,
+        "height": 200,
+        "appearance": {
+          "padding": 14,
+          "opacity": 0.55,
+          "radius": 48
+        },
+        "code": {
+          "html": "<canvas></canvas>",
+          "css": "canvas {\n  display: block;\n  width: 100%;\n  height: 100%;\n}\n",
+          "js": "const canvas = document.querySelector(\"canvas\");\nconst ctx = canvas.getContext(\"2d\");\n\nfunction fit() {\n  const ratio = devicePixelRatio || 1;\n  canvas.width = Math.round(innerWidth * ratio);\n  canvas.height = Math.round(innerHeight * ratio);\n  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);\n}\nfit();\nstill.on(\"resize\", fit);\n\nfunction hand(angle, length, width, color) {\n  ctx.save();\n  ctx.rotate(angle);\n  ctx.beginPath();\n  ctx.moveTo(0, length * 0.12);\n  ctx.lineTo(0, -length);\n  ctx.lineWidth = width;\n  ctx.lineCap = \"round\";\n  ctx.strokeStyle = color;\n  ctx.stroke();\n  ctx.restore();\n}\n\nfunction draw() {\n  const { seconds, ticks, numbers } = still.values;\n  const { accent, text } = still.theme;\n  const w = innerWidth;\n  const h = innerHeight;\n  const r = Math.min(w, h) / 2 - 2;\n  const now = new Date();\n  const ms = now.getMilliseconds() / 1000;\n  const s = now.getSeconds() + ms;\n  const m = now.getMinutes() + s / 60;\n  const hr = (now.getHours() % 12) + m / 60;\n  ctx.clearRect(0, 0, w, h);\n  ctx.save();\n  ctx.translate(w / 2, h / 2);\n  const marks = ticks === \"Minutes\" ? 60 : ticks === \"Hours\" ? 12 : 0;\n  for (let i = 0; i < marks; i++) {\n    const major = marks === 12 || i % 5 === 0;\n    ctx.save();\n    ctx.rotate((i / marks) * Math.PI * 2);\n    ctx.beginPath();\n    ctx.moveTo(0, -r);\n    ctx.lineTo(0, -r + (major ? r * 0.1 : r * 0.05));\n    ctx.lineWidth = major ? 2 : 1;\n    ctx.strokeStyle = text;\n    ctx.globalAlpha = major ? 0.8 : 0.35;\n    ctx.stroke();\n    ctx.restore();\n  }\n  if (numbers) {\n    ctx.fillStyle = text;\n    ctx.globalAlpha = 0.85;\n    ctx.font = `${Math.round(r * 0.16)}px ${getComputedStyle(document.body).fontFamily}`;\n    ctx.textAlign = \"center\";\n    ctx.textBaseline = \"middle\";\n    for (let n = 1; n <= 12; n++) {\n      const a = (n / 12) * Math.PI * 2;\n      ctx.fillText(String(n), Math.sin(a) * r * 0.72, -Math.cos(a) * r * 0.72);\n    }\n  }\n  ctx.globalAlpha = 1;\n  hand((hr / 12) * Math.PI * 2, r * 0.5, Math.max(3, r * 0.05), text);\n  hand((m / 60) * Math.PI * 2, r * 0.75, Math.max(2, r * 0.035), text);\n  if (seconds) hand((s / 60) * Math.PI * 2, r * 0.85, 1.5, accent);\n  ctx.beginPath();\n  ctx.arc(0, 0, Math.max(3, r * 0.04), 0, Math.PI * 2);\n  ctx.fillStyle = seconds ? accent : text;\n  ctx.fill();\n  ctx.restore();\n  requestAnimationFrame(draw);\n}\ndraw();\n",
+          "permissions": [],
+          "fields": [
+            {
+              "key": "seconds",
+              "label": "Second hand",
+              "type": "toggle",
+              "default": true
+            },
+            {
+              "key": "numbers",
+              "label": "Numbers",
+              "type": "toggle",
+              "default": false
+            },
+            {
+              "key": "ticks",
+              "label": "Ticks",
+              "type": "select",
+              "default": "Hours",
+              "options": [
+                "Hours",
+                "Minutes",
+                "None"
+              ]
+            }
+          ]
+        },
+        "tags": [
+          "clock",
+          "analog",
+          "code"
+        ]
+      }
+    },
+    {
+      "id": "big-clock",
+      "updated": "2026-11-17",
+      "package": {
+        "format": "still-widget",
+        "version": 1,
+        "kind": "clock",
+        "name": "Big clock",
+        "author": "Still",
+        "description": "Large time with no panel behind it. Reads well over busy wallpapers thanks to a soft text shadow.",
+        "width": 380,
+        "height": 150,
+        "appearance": {
+          "opacity": 0,
+          "textShadow": true,
+          "align": "center",
+          "fontWeight": 300,
+          "padding": 8,
+          "scale": 1.15,
+          "textColor": "#f4f1ea"
+        },
+        "options": {
+          "showSeconds": false,
+          "showDay": false,
+          "showDate": false
+        },
+        "tags": [
+          "minimal",
+          "transparent"
+        ]
+      }
+    },
+    {
+      "id": "core-load",
+      "updated": "2026-11-17",
+      "package": {
+        "format": "still-widget",
+        "version": 1,
+        "kind": "system",
+        "name": "Core load",
+        "author": "Still",
+        "description": "Every CPU thread as its own column, plus overall CPU usage.",
+        "width": 360,
+        "height": 190,
+        "appearance": {
+          "accent": "#d6aaa0",
+          "opacity": 0.7
+        },
+        "options": {
+          "metrics": [
+            "cores",
+            "cpu"
+          ],
+          "title": "Processor"
+        },
+        "tags": [
+          "cpu",
+          "cores"
+        ]
+      }
+    },
+    {
+      "id": "frosted-clock",
+      "updated": "2026-11-17",
+      "package": {
+        "format": "still-widget",
+        "version": 1,
+        "kind": "clock",
+        "name": "Frosted clock",
+        "author": "Still",
+        "description": "Clock and date on a pane of blurred wallpaper. Adjust the blur strength in the editor.",
+        "width": 340,
+        "height": 200,
+        "appearance": {
+          "blurMode": "wallpaper",
+          "blur": 22,
+          "opacity": 0.28,
+          "background": "#20231f",
+          "accent": "#d8c9a6",
+          "radius": 26,
+          "padding": 28,
+          "borderWidth": 1,
+          "borderColor": "#ffffff",
+          "borderOpacity": 0.14
+        },
+        "options": {
+          "showSeconds": false,
+          "dateFormat": "medium"
+        },
+        "tags": [
+          "blur",
+          "date"
+        ]
+      }
+    },
+    {
+      "id": "music-bars",
+      "updated": "2026-11-17",
+      "package": {
+        "format": "still-widget",
+        "version": 1,
+        "kind": "code",
+        "name": "Music bars",
+        "author": "Still",
+        "description": "A spectrum that moves with whatever is playing. The bars use your accent color.",
+        "width": 380,
+        "height": 150,
+        "appearance": {
+          "padding": 18,
+          "opacity": 0.5,
+          "radius": 18
+        },
+        "code": {
+          "html": "<canvas></canvas>",
+          "css": "canvas {\n  display: block;\n  width: 100%;\n  height: 100%;\n}\n",
+          "js": "const canvas = document.querySelector(\"canvas\");\nconst ctx = canvas.getContext(\"2d\");\n\nfunction fit() {\n  const ratio = devicePixelRatio || 1;\n  canvas.width = Math.round(innerWidth * ratio);\n  canvas.height = Math.round(innerHeight * ratio);\n  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);\n}\nfit();\nstill.on(\"resize\", fit);\n\nlet bands = new Array(48).fill(0);\nconst shown = [];\nstill.on(\"audio\", (audio) => (bands = audio.bands));\n\nfunction draw() {\n  const { bars, gap, mirror, rounded, falloff } = still.values;\n  const w = innerWidth;\n  const h = innerHeight;\n  const count = Math.round(bars);\n  const width = Math.max(1, (w - gap * (count - 1)) / count);\n  ctx.clearRect(0, 0, w, h);\n  ctx.fillStyle = still.theme.accent;\n  for (let i = 0; i < count; i++) {\n    // Each bar shows the loudest of the bands it covers.\n    const from = Math.floor((i * bands.length) / count);\n    const to = Math.max(from + 1, Math.floor(((i + 1) * bands.length) / count));\n    let level = 0;\n    for (let b = from; b < to; b++) level = Math.max(level, bands[b]);\n    shown[i] = Math.max(level, (shown[i] || 0) * falloff);\n    const height = Math.max(2, shown[i] * (mirror ? h / 2 : h));\n    const x = i * (width + gap);\n    const y = mirror ? h / 2 - height : h - height;\n    const total = mirror ? height * 2 : height;\n    ctx.beginPath();\n    ctx.roundRect(x, y, width, total, rounded ? Math.min(width / 2, 4) : 0);\n    ctx.fill();\n  }\n  requestAnimationFrame(draw);\n}\ndraw();\n",
+          "permissions": [
+            "audio"
+          ],
+          "fields": [
+            {
+              "key": "bars",
+              "label": "Bars",
+              "type": "number",
+              "default": 32,
+              "min": 8,
+              "max": 48,
+              "step": 1
+            },
+            {
+              "key": "gap",
+              "label": "Gap",
+              "type": "number",
+              "default": 3,
+              "min": 0,
+              "max": 8,
+              "step": 1
+            },
+            {
+              "key": "falloff",
+              "label": "Falloff",
+              "type": "number",
+              "default": 0.9,
+              "min": 0.6,
+              "max": 0.98,
+              "step": 0.01
+            },
+            {
+              "key": "mirror",
+              "label": "Mirror",
+              "type": "toggle",
+              "default": false
+            },
+            {
+              "key": "rounded",
+              "label": "Rounded bars",
+              "type": "toggle",
+              "default": true
+            }
+          ]
+        },
+        "tags": [
+          "audio",
+          "visualizer",
+          "code"
+        ]
+      }
+    },
+    {
+      "id": "notes",
+      "updated": "2026-11-17",
+      "package": {
+        "format": "still-widget",
+        "version": 1,
+        "kind": "custom",
+        "name": "Notes",
+        "author": "Still",
+        "description": "Editable text with today's date. Change the words in the editor's Content tab.",
+        "width": 340,
+        "height": 190,
+        "appearance": {
+          "opacity": 0.55,
+          "accent": "#d8c9a6"
+        },
+        "blocks": [
+          {
+            "type": "text",
+            "text": "Today",
+            "size": 16
+          },
+          {
+            "type": "text",
+            "text": "One thing at a time.",
+            "size": 26
+          },
+          {
+            "type": "date",
+            "size": 13
+          }
+        ],
+        "tags": [
+          "text",
+          "notes"
+        ]
+      }
+    },
+    {
+      "id": "resource-rings",
+      "updated": "2026-11-17",
+      "package": {
+        "format": "still-widget",
+        "version": 1,
+        "kind": "system",
+        "name": "Resource rings",
+        "author": "Still",
+        "description": "CPU, memory, disk and swap as four rings in one row.",
+        "width": 440,
+        "height": 160,
+        "appearance": {
+          "opacity": 0.6,
+          "radius": 20,
+          "padding": 20
+        },
+        "options": {
+          "metrics": [
+            "cpu",
+            "memory",
+            "disk",
+            "swap"
+          ],
+          "meterStyle": "rings",
+          "showTitle": false,
+          "showDetails": false
+        },
+        "tags": [
+          "rings",
+          "performance"
+        ]
+      }
+    },
+    {
+      "id": "system-summary",
+      "updated": "2026-11-17",
+      "package": {
+        "format": "still-widget",
+        "version": 1,
+        "kind": "system",
+        "name": "System summary",
+        "author": "Still",
+        "description": "A compact text readout: CPU, memory, disk and uptime.",
+        "width": 320,
+        "height": 150,
+        "appearance": {
+          "font": "Consolas",
+          "opacity": 0.55,
+          "padding": 18,
+          "radius": 10,
+          "accent": "#cbc5b9"
+        },
+        "options": {
+          "metrics": [
+            "cpu",
+            "memory",
+            "disk",
+            "uptime"
+          ],
+          "meterStyle": "text",
+          "title": "This PC"
+        },
+        "tags": [
+          "text",
+          "compact"
+        ]
+      }
+    },
+    {
+      "id": "twelve-hour",
+      "updated": "2026-11-17",
+      "package": {
+        "format": "still-widget",
+        "version": 1,
+        "kind": "clock",
+        "name": "12-hour clock",
+        "author": "Still",
+        "description": "AM/PM time without a leading zero, with a seconds bar.",
+        "width": 360,
+        "height": 210,
+        "appearance": {
+          "font": "DM Sans",
+          "background": "#1b1f26",
+          "accent": "#b1c5d2",
+          "textColor": "#e9eef3",
+          "opacity": 0.8
+        },
+        "options": {
+          "hour24": false,
+          "leadingZero": false,
+          "dateFormat": "short"
+        },
+        "tags": [
+          "12-hour"
+        ]
+      }
+    },
+    {
+      "id": "uptime-tag",
+      "updated": "2026-11-17",
+      "package": {
+        "format": "still-widget",
+        "version": 1,
+        "kind": "custom",
+        "name": "Uptime tag",
+        "author": "Still",
+        "description": "A small label showing how long this PC has been on.",
+        "width": 200,
+        "height": 64,
+        "appearance": {
+          "opacity": 0.6,
+          "padding": 14,
+          "radius": 12,
+          "align": "center"
+        },
+        "blocks": [
+          {
+            "type": "uptime",
+            "size": 15
+          }
+        ],
+        "tags": [
+          "small",
+          "uptime"
+        ]
+      }
+    },
+    {
+      "id": "waveform",
+      "updated": "2026-11-17",
+      "package": {
+        "format": "still-widget",
+        "version": 1,
+        "kind": "code",
+        "name": "Waveform",
+        "author": "Still",
+        "description": "An oscilloscope line drawn from the sound your PC is playing.",
+        "width": 380,
+        "height": 120,
+        "appearance": {
+          "padding": 12,
+          "opacity": 0.45,
+          "radius": 16,
+          "accent": "#b1c5d2"
+        },
+        "code": {
+          "html": "<canvas></canvas>",
+          "css": "canvas {\n  display: block;\n  width: 100%;\n  height: 100%;\n}\n",
+          "js": "const canvas = document.querySelector(\"canvas\");\nconst ctx = canvas.getContext(\"2d\");\n\nfunction fit() {\n  const ratio = devicePixelRatio || 1;\n  canvas.width = Math.round(innerWidth * ratio);\n  canvas.height = Math.round(innerHeight * ratio);\n  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);\n}\nfit();\nstill.on(\"resize\", fit);\n\nlet wave = new Array(128).fill(0);\nlet shown = wave.slice();\nstill.on(\"audio\", (audio) => (wave = audio.wave));\n\nfunction draw() {\n  const { thickness, gain, glow, fill } = still.values;\n  const w = innerWidth;\n  const h = innerHeight;\n  ctx.clearRect(0, 0, w, h);\n  // Ease toward the newest samples so the line doesn't jitter.\n  shown = shown.map((v, i) => v + ((wave[i] || 0) - v) * 0.5);\n  const y = (v) => h / 2 - Math.max(-1, Math.min(1, v * gain)) * (h / 2 - thickness);\n  ctx.beginPath();\n  shown.forEach((v, i) => {\n    const x = (i / (shown.length - 1)) * w;\n    if (i === 0) ctx.moveTo(x, y(v));\n    else ctx.lineTo(x, y(v));\n  });\n  ctx.lineJoin = \"round\";\n  ctx.lineWidth = thickness;\n  ctx.strokeStyle = still.theme.accent;\n  ctx.shadowColor = still.theme.accent;\n  ctx.shadowBlur = glow ? 10 : 0;\n  ctx.stroke();\n  if (fill) {\n    ctx.lineTo(w, h / 2);\n    ctx.lineTo(0, h / 2);\n    ctx.closePath();\n    ctx.globalAlpha = 0.18;\n    ctx.fillStyle = still.theme.accent;\n    ctx.fill();\n    ctx.globalAlpha = 1;\n  }\n  requestAnimationFrame(draw);\n}\ndraw();\n",
+          "permissions": [
+            "audio"
+          ],
+          "fields": [
+            {
+              "key": "thickness",
+              "label": "Line width",
+              "type": "number",
+              "default": 2,
+              "min": 1,
+              "max": 6,
+              "step": 0.5
+            },
+            {
+              "key": "gain",
+              "label": "Gain",
+              "type": "number",
+              "default": 1.6,
+              "min": 0.5,
+              "max": 4,
+              "step": 0.1
+            },
+            {
+              "key": "glow",
+              "label": "Glow",
+              "type": "toggle",
+              "default": true
+            },
+            {
+              "key": "fill",
+              "label": "Fill under the line",
+              "type": "toggle",
+              "default": false
+            }
+          ]
+        },
+        "tags": [
+          "audio",
+          "visualizer",
+          "code"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "format": "still-widget",
+  "version": 1,
+  "kind": "system",
+  "name": "Core load",
+  "author": "Still",
+  "description": "Every CPU thread as its own column, plus overall CPU usage.",
+  "width": 360,
+  "height": 190,
+  "appearance": {
+    "accent": "#d6aaa0",
+    "opacity": 0.7
+  },
+  "options": {
+    "metrics": [
+      "cores",
+      "cpu"
+    ],
+    "title": "Processor"
+  },
+  "tags": [
+    "cpu",
+    "cores"
+  ]
+}

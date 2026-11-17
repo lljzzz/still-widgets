@@ -1,0 +1,49 @@
+name: Catalog
+
+on:
+  pull_request:
+    paths: ["widgets/**", "schema/**", "scripts/**"]
+  push:
+    branches: [main]
+    paths: ["widgets/**", "schema/**", "scripts/**"]
+  workflow_dispatch:
+
+jobs:
+  # Pull requests (including ones from forks) only validate; they never write.
+  check:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/build-index.mjs --check
+
+  # After a merge, rebuild index.json so Still sees the new widgets.
+  publish:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/build-index.mjs
+      - name: Commit index.json
+        run: |
+          if git diff --quiet -- index.json; then
+            echo "index.json is already up to date"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.json
+          git commit -m "Rebuild index.json"
+          git push
